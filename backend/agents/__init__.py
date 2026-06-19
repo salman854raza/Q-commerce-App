@@ -5,13 +5,10 @@ from .cart_agent import CartAgent
 from .delivery_agent import DeliveryAgent
 from .finance_agent import FinanceAgent
 from .email_agent import EmailAgent
+from .whatsapp_agent import WhatsAppAgent
 
 __all__ = [
-    "CoordinatorAgent",
-    "SellingAgent",
-    "ShoppingAgent",
-    "CartAgent",
-    "DeliveryAgent",
-    "FinanceAgent",
-    "EmailAgent",
+    "CoordinatorAgent", "SellingAgent", "ShoppingAgent",
+    "CartAgent", "DeliveryAgent", "FinanceAgent",
+    "EmailAgent", "WhatsAppAgent",
 ]

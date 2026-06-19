@@ -1,187 +1,88 @@
-# 🍕 Pizzao - Q-Commerce Pizza App
+# 🍕 Pizzao Q-Commerce Website
 
-A **full-stack Q-Commerce restaurant website** built with Next.js 14, Tailwind CSS, Framer Motion, FastAPI, and a Multi-Agent AI System.
+A professional, fully-animated pizza restaurant website with AI-powered multi-agent chatbot.
 
----
-
-## 🚀 Tech Stack
+## 🏗️ Tech Stack
 
 ### Frontend
 - **Next.js 14** (App Router)
-- **Tailwind CSS** - Styling
-- **Framer Motion** - Animations & 3D effects
-- **TypeScript** - Type safety
-- **Sanity CMS** - Content management & images
+- **Tailwind CSS 4**
+- **Framer Motion** — Parallax, card-flip, 3D, smooth scroll animations
+- **TypeScript**
 
 ### Backend
-- **FastAPI** - REST API
-- **OpenAI Agents SDK** - Multi-agent system
-- **OpenRouter API** - Free LLM access
-- **Supabase** - Database & user management
+- **FastAPI** — REST API
+- **Multi-Agent System** — 7 specialized AI agents
+- **OpenRouter API** — LLM integration (GPT-3.5-turbo)
+- **Docker** — Containerized for Hugging Face Spaces
 
-### Deployment
-- **Vercel** - Frontend hosting
-- **Hugging Face Spaces** - Backend API hosting
-- **GitHub** - Version control
-
----
-
-## 🤖 Multi-Agent AI System
-
-The chatbot is powered by a **coordinated multi-agent system**:
-
-| Agent | Responsibility |
-|-------|---------------|
-| 🛒 **Shopping Agent** | Browse menu, find items, recommendations |
-| 💰 **Selling Agent** | Promotions, deals, upselling |
-| 💳 **Finance Agent** | Pricing, payments, invoices |
-| 🛍️ **Cart Agent** | Add/remove items, cart management |
-| 🚚 **Delivery Agent** | Order tracking, delivery ETA |
-| 📧 **Email Agent** | Order confirmations, receipts |
-| 📱 **WhatsApp Agent** | WhatsApp notifications |
-| 🎯 **Coordinator Agent** | Orchestrates all agents |
-
----
+### Data
+- **Sanity CMS** — Content & image management
+- **Supabase** — User data & orders database
 
 ## 📄 Pages
 
-| Page | Description |
-|------|-------------|
-| 🏠 **Home** | Hero section, popular pizzas, menu preview |
-| ℹ️ **About** | Restaurant story, specialities, timeline |
-| 🍕 **Menu** | Full menu with categories & filters |
-| 👨‍🍳 **Chefs** | Meet our master chefs |
-| 🏢 **Franchise** | Business opportunities |
-| 📞 **Contact** | Contact form with typewriter effect |
+| Page | Features |
+|------|----------|
+| **Home** | Full-screen hero, Popular Pizza, Exclusive Menu tabs, Testimonials |
+| **About** | Parallax images, Card-flip specialities, 3D spinning tomato, Timeline |
+| **Menu** | Rotating delivery badge, Category tabs, Menu items |
+| **Chefs** | Masterchef rotating badge, Chef grid with hover reveal |
+| **Franchise** | Steps timeline, Dual parallax images, Application form |
+| **Contact** | Typewriter effect (Hello/Assalam Alikum), Animated form, Map |
 
----
+## 🤖 AI Agents
 
-## ✨ Key Animations & Features
+- **Coordinator Agent** — Routes to specialized agents
+- **Selling Agent** — Deals, promotions, upselling
+- **Shopping Agent** — Menu browsing, search
+- **Cart Agent** — Add/remove items, checkout
+- **Delivery Agent** — Order tracking, ETA
+- **Finance Agent** — Payments, invoices, refunds
+- **Email Agent** — Confirmations, receipts
+- **WhatsApp Agent** — SMS/WhatsApp notifications
 
-- **Parallax Scroll** - Food images float on scroll
-- **3D Card Flips** - Speciality cards flip on scroll
-- **Spinning 3D Vegetables** - Continuous rotation animations
-- **Typewriter Effect** - Contact form "SAY Hello / Assalam Alikum..."
-- **Smooth Parallax** - Chef & pizza images move independently
-- **Timeline Slider** - Journey section with < > navigation
-- **AI Chatbot** - Floating chat UI connected to multi-agent backend
-- **Counter Animations** - Stats count up on scroll
+## 🚀 Deployment
 
----
+### Frontend → Vercel
+1. Connect GitHub repo to Vercel
+2. Set Root Directory: `frontend`
+3. Add environment variables from `.env.example`
 
-## 🛠️ Setup & Installation
+### Backend → Hugging Face Spaces
+1. Create Space with Docker SDK
+2. Upload `backend/` folder contents
+3. Add secrets: `OPENROUTER_API_KEY`, `SUPABASE_URL`, `SUPABASE_KEY`
 
-### Prerequisites
-```bash
-node >= 18.0.0
-python >= 3.10
-```
+## 🎨 Animations (from client screenshots)
 
-### Frontend Setup
-```bash
-cd frontend
-npm install
-cp .env.example .env.local
-npm run dev
-```
-
-### Backend Setup
-```bash
-cd backend
-pip install -r requirements.txt
-cp .env.example .env
-uvicorn main:app --reload
-```
-
-### Environment Variables
-
-#### Frontend (`.env.local`)
-```env
-NEXT_PUBLIC_SANITY_PROJECT_ID=your_sanity_project_id
-NEXT_PUBLIC_SANITY_DATASET=production
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-NEXT_PUBLIC_API_URL=your_huggingface_api_url
-```
-
-#### Backend (`.env`)
-```env
-OPENROUTER_API_KEY=your_openrouter_api_key
-SUPABASE_URL=your_supabase_url
-SUPABASE_SERVICE_KEY=your_supabase_service_key
-```
-
----
+- ✅ Hero pizza parallax scroll
+- ✅ Chef image moves DOWN, pizza moves UP on scroll
+- ✅ Spinning tomato (3D, continuous rotation on scroll)
+- ✅ Card-flip specialities on scroll
+- ✅ `< >` navigation for journey timeline
+- ✅ Two franchise images animate separately (up/down)
+- ✅ Typewriter: "SAY Hello / Assalam Alikum / Hella / Shalve"
+- ✅ All smooth scroll effects
 
 ## 📁 Project Structure
 
 ```
 Q-commerce-App/
-├── frontend/                 # Next.js 14 App
+├── frontend/          # Next.js app
 │   ├── app/
-│   │   ├── (pages)/
-│   │   │   ├── about/
-│   │   │   ├── menu/
-│   │   │   ├── chefs/
-│   │   │   ├── franchise/
-│   │   │   └── contact/
-│   │   ├── components/
-│   │   │   ├── layout/       # Navbar, Footer
-│   │   │   ├── home/         # Hero, PopularPizza, etc.
-│   │   │   ├── about/        # About sections
-│   │   │   ├── chatbot/      # AI Chatbot UI
-│   │   │   └── ui/           # Reusable components
-│   │   ├── lib/              # Utilities, Sanity client
-│   │   └── styles/
-│   ├── sanity/               # Sanity schema & config
-│   └── public/
-├── backend/                  # FastAPI + Multi-Agent System
-│   ├── agents/
-│   │   ├── coordinator.py
-│   │   ├── shopping_agent.py
-│   │   ├── selling_agent.py
-│   │   ├── finance_agent.py
-│   │   ├── cart_agent.py
-│   │   ├── delivery_agent.py
-│   │   ├── email_agent.py
-│   │   └── whatsapp_agent.py
-│   ├── main.py               # FastAPI app
+│   │   ├── page.tsx           # Home
+│   │   ├── about/page.tsx     # About
+│   │   ├── menu/page.tsx      # Menu
+│   │   ├── chefs/page.tsx     # Chefs
+│   │   ├── franchise/page.tsx # Franchise
+│   │   ├── contact/page.tsx   # Contact
+│   │   └── components/        # All components
+│   └── package.json
+├── backend/           # FastAPI
+│   ├── main.py
+│   ├── agents/        # 7 AI agents
 │   ├── requirements.txt
-│   └── Dockerfile            # For Hugging Face deployment
-└── README.md
+│   └── Dockerfile
+└── vercel.json
 ```
-
----
-
-## 🚀 Deployment
-
-### Frontend → Vercel
-```bash
-vercel --prod
-```
-
-### Backend → Hugging Face Spaces
-```bash
-# Docker-based deployment
-# Push to HF Space repository
-```
-
----
-
-## 📸 Screenshots
-
-See `/screenshots` folder for design references and animation specifications.
-
----
-
-## 📝 License
-
-MIT License - Built with ❤️ by Salman Raza
-
----
-
-## 🔗 Live Links
-
-- **Frontend**: [Coming Soon - Vercel]
-- **Backend API**: [Coming Soon - Hugging Face]
-- **GitHub**: https://github.com/salman854raza/Q-commerce-App
