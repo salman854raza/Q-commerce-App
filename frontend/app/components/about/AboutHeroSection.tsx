@@ -1,140 +1,79 @@
 'use client';
-
-import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import { useInView } from 'react-intersection-observer';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import Link from 'next/link';
 import { Phone } from 'lucide-react';
 
 export default function AboutHeroSection() {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
-
-  // Chef image moves DOWN on scroll (parallax down)
-  const chefY = useTransform(scrollYProgress, [0, 1], ['0%', '25%']);
-  // Pizza image moves UP on scroll (parallax up)
-  const pizzaY = useTransform(scrollYProgress, [0, 1], ['0%', '-25%']);
-
-  const [contentRef, inView] = useInView({ threshold: 0.2, triggerOnce: true });
+  // Person image moves DOWN, pizza image moves UP on scroll
+  const personY = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const pizzaY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const leafY = useTransform(scrollYProgress, [0, 1], [0, 60]);
+  const inView = useInView(ref, { once: true });
 
   return (
     <section ref={ref} className="py-24 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
-          {/* Left: Text content */}
-          <div ref={contentRef}>
-            <motion.p
-              initial={{ opacity: 0, x: -20 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              className="text-[#c8102e] text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-2"
-            >
-              <span className="w-6 h-0.5 bg-[#c8102e] inline-block" />
-              BEST ITALIAN FOOD FOR YOUR FAMILY
-            </motion.p>
-
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.15 }}
-              className="text-4xl md:text-5xl font-black text-gray-900 uppercase leading-tight mb-6"
-            >
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* Left text */}
+          <motion.div initial={{ opacity: 0, x: -50 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.8 }}>
+            <p className="text-[#c8102e] font-bold text-xs uppercase tracking-widest mb-3 flex items-center gap-2">
+              <span className="w-8 h-0.5 bg-[#c8102e]" /> BEST ITALIAN FOOD FOR YOUR FAMILY
+            </p>
+            <h1 className="text-4xl md:text-5xl font-black leading-tight mb-6">
               AMAZING AND HYGIENE PASTA AND PIZZA PARLOR.
-            </motion.h2>
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.3 }}
-              className="text-gray-500 leading-relaxed mb-8 text-sm"
-            >
+            </h1>
+            <p className="text-gray-500 leading-relaxed mb-8 max-w-md">
               All about quality you can trust. As one of the original founding pizza brands and the 3rd largest pizza chain, our sole mission is making the freshest, tastiest.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.4 }}
-              className="flex items-center gap-4 mb-8"
-            >
-              <motion.button
-                whileHover={{ scale: 1.05, backgroundColor: '#a00d24' }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-[#c8102e] text-white px-6 py-3 text-xs font-black uppercase tracking-widest"
-              >
-                PROFESSIONAL CHEF
-              </motion.button>
-              <a href="tel:18002220000" className="flex items-center gap-2 text-gray-700 hover:text-[#c8102e] transition-colors">
+            </p>
+            <div className="flex flex-wrap gap-4 mb-8">
+              <Link href="/chefs">
+                <motion.button className="btn-dark" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                  PROFESSIONAL CHEF
+                </motion.button>
+              </Link>
+              <div className="flex items-center gap-2 text-gray-700">
                 <Phone size={16} className="text-[#c8102e]" />
-                <span className="font-semibold text-sm">1 800 222 000</span>
-              </a>
-            </motion.div>
-
-            {/* 5 star reviews */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.5 }}
-              className="flex items-center gap-3"
-            >
+                <span className="font-semibold">1 800 222 000</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
               <div className="flex -space-x-2">
-                {['😊', '👨', '👩', '🧑'].map((emoji, i) => (
-                  <div key={i} className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-lg">
-                    {emoji}
-                  </div>
+                {['👩', '👨', '👩'].map((e, i) => (
+                  <div key={i} className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-lg">{e}</div>
                 ))}
               </div>
-              <p className="text-sm text-gray-600 font-medium">
-                5 star reviews from our<br />
-                <strong className="text-gray-900">satisfied customers.</strong>
-              </p>
-            </motion.div>
-          </div>
+              <p className="text-sm font-medium text-gray-600">5 star reviews from our satisfied customers.</p>
+            </div>
+          </motion.div>
 
-          {/* Right: Parallax image stack */}
-          <div className="relative h-[500px] hidden lg:block">
-            {/* Chef image - moves DOWN on scroll */}
-            <motion.div
-              style={{ y: chefY }}
-              className="absolute left-0 top-0 w-56 h-72 z-20"
-            >
-              <div className="w-full h-full rounded-2xl bg-gradient-to-b from-amber-100 to-amber-200 flex items-end justify-center overflow-hidden shadow-2xl">
-                <span className="text-[120px] leading-none">👨‍🍳</span>
-              </div>
+          {/* Right - parallax images */}
+          <div className="relative h-[500px]">
+            {/* Pizza image - moves UP */}
+            <motion.div className="absolute top-0 right-0 w-48 h-48 md:w-56 md:h-56" style={{ y: pizzaY }}>
+              <motion.div className="w-full h-full bg-gray-100 rounded-sm overflow-hidden flex items-center justify-center shadow-2xl"
+                initial={{ opacity: 0, scale: 0.8 }} animate={inView ? { opacity: 1, scale: 1 } : {}} transition={{ delay: 0.4, duration: 0.7 }}>
+                <span className="text-8xl">🍕</span>
+              </motion.div>
             </motion.div>
 
-            {/* Pizza image - moves UP on scroll */}
-            <motion.div
-              style={{ y: pizzaY }}
-              className="absolute right-0 top-16 w-64 h-56 z-10"
-            >
-              <div className="w-full h-full rounded-2xl bg-gradient-to-b from-orange-100 to-orange-200 flex items-center justify-center overflow-hidden shadow-2xl">
-                <span className="text-[100px]">🍕</span>
-              </div>
+            {/* Chef/Person image - moves DOWN */}
+            <motion.div className="absolute bottom-8 left-8 w-52 h-64 md:w-64 md:h-80" style={{ y: personY }}>
+              <motion.div className="w-full h-full bg-gray-200 rounded-sm overflow-hidden flex items-center justify-center shadow-2xl"
+                initial={{ opacity: 0, scale: 0.8 }} animate={inView ? { opacity: 1, scale: 1 } : {}} transition={{ delay: 0.2, duration: 0.7 }}>
+                <span className="text-8xl">👨‍🍳</span>
+              </motion.div>
             </motion.div>
 
-            {/* Small decorative dot */}
-            <motion.div
-              animate={{ scale: [1, 1.5, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="absolute bottom-20 left-1/2 w-3 h-3 rounded-full bg-[#c8102e]"
-            />
+            {/* Floating leaf */}
+            <motion.div className="absolute top-1/3 left-0 pointer-events-none" style={{ y: leafY }}>
+              <span className="text-5xl animate-float block" style={{ animationDelay: '1s' }}>🌿</span>
+            </motion.div>
           </div>
         </div>
       </div>
-
-      {/* Delivery banner */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.6 }}
-        className="mt-16 bg-gray-50 border-y border-gray-100 py-4"
-      >
-        <p className="text-center text-sm font-semibold text-gray-700 flex items-center justify-center gap-2">
-          <span>🛵</span>
-          GET FREE DELIVERY YOUR FOOD OF HAPPINESS IN{' '}
-          <span className="text-[#c8102e] font-black underline">WITHIN 30 MINUTES.</span>
-        </p>
-      </motion.div>
     </section>
   );
 }

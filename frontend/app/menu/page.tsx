@@ -1,6 +1,6 @@
 import PageHero from '../components/ui/PageHero';
-import ExclusiveMenuSection from '../components/home/ExclusiveMenuSection';
 import MenuHeroSection from '../components/menu/MenuHeroSection';
+import ExclusiveMenuSection from '../components/home/ExclusiveMenuSection';
 
 export const metadata = {
   title: 'Our Menu | Pizzao - Wonderful Dining Experience',
@@ -11,7 +11,9 @@ export default function MenuPage() {
     <main>
       <PageHero title="OUR MENU" subtitle="WONDERFUL DINING EXPERIENCE" />
       <MenuHeroSection />
-      <ExclusiveMenuSection />
+      <div id="exclusive-menu">
+        <ExclusiveMenuSection />
+      </div>
     </main>
   );
 }

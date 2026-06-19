@@ -1,109 +1,77 @@
 'use client';
-
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { Apple, ThumbsUp, ChefHat, Music, Pizza, Wind } from 'lucide-react';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 
 const features = [
-  { icon: Apple, title: 'Always Serve Fresh Food', desc: 'Perfectly portioned ingredients.' },
-  { icon: ThumbsUp, title: 'Maintaining the Quality of Food', desc: 'Standardized food recipes for menu.' },
-  { icon: ChefHat, title: 'We Have Popular Masterchef', desc: 'The patient staff reflects the style.' },
-  { icon: Music, title: 'Best Live Music Restaurants', desc: 'Beautiful natural & serene ambience.' },
-  { icon: Pizza, title: 'Delicious Pizza Recipes', desc: 'Best crust with this good recipe.' },
-  { icon: Wind, title: 'Wonderful Dining Experience', desc: 'A memorable dining atmosphere.' },
+  { icon: '🍎', title: 'ALWAYS SERVE FRESH FOOD', desc: 'Perfectly portioned ingredients.' },
+  { icon: '👍', title: 'MAINTAINING THE QUALITY OF FOOD', desc: 'Standardized food recipes for menu.' },
+  { icon: '👨‍🍳', title: 'WE HAVE POPULAR MASTERCHEF', desc: 'The patient staff reflects the style.' },
+  { icon: '🎵', title: 'BEST LIVE MUSIC RESTAURANTS', desc: 'Beautiful natural & serene ambience.' },
+  { icon: '🍕', title: 'DELICIOUS PIZZA RECIPES', desc: 'Best crust with this good recipe.' },
+  { icon: '✈️', title: 'WONDERFUL DINING EXPERIENCE', desc: 'A memorable dining atmosphere.' },
 ];
 
 export default function WhyChooseUsSection() {
-  const [ref, inView] = useInView({ threshold: 0.2, triggerOnce: true });
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
 
   return (
     <section ref={ref} className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-12">
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            className="text-[#c8102e] text-sm font-semibold uppercase tracking-widest"
-          >
-            WHY CHOOSE US?
-          </motion.p>
-          <span className="w-px h-8 bg-gray-200" />
-          <motion.h2
-            initial={{ opacity: 0, x: -20 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            className="text-3xl md:text-4xl font-black text-gray-200 uppercase"
-          >
-            WE ARE KNOWN
-          </motion.h2>
-        </div>
+        <motion.div className="flex items-center gap-4 mb-12"
+          initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}>
+          <span className="text-[#c8102e] font-bold text-sm uppercase tracking-widest">WHY CHOOSE US?</span>
+          <div className="w-px h-8 bg-gray-200" />
+          <h2 className="text-4xl md:text-5xl font-black text-gray-200">WE ARE KNOWN</h2>
+        </motion.div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {features.map((feature, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ x: 8 }}
-              className="flex items-start gap-4 p-4 border border-gray-100 rounded-lg hover:border-[#c8102e] hover:shadow-md transition-all cursor-pointer"
-            >
-              <div className="w-12 h-12 rounded-full border-2 border-gray-200 flex items-center justify-center flex-shrink-0">
-                <feature.icon size={20} className="text-gray-500" />
+        <div className="grid md:grid-cols-2 gap-x-12 gap-y-0">
+          {features.map((f, i) => (
+            <motion.div key={f.title}
+              className="flex items-center gap-5 py-5 border-b border-gray-100"
+              initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ delay: i * 0.1, duration: 0.5 }}>
+              <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center flex-shrink-0 text-2xl">
+                {f.icon}
               </div>
               <div>
-                <h4 className="font-bold text-gray-900 text-sm uppercase tracking-wide">{feature.title}</h4>
-                <p className="text-gray-400 text-sm mt-1">{feature.desc}</p>
+                <h3 className="font-bold text-xs uppercase tracking-wider mb-0.5">{f.title}</h3>
+                <p className="text-gray-500 text-xs">{f.desc}</p>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Promo banners */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
-          {/* Special Delicious */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.6 }}
-            whileHover={{ scale: 1.02 }}
-            className="relative bg-gray-900 rounded-2xl overflow-hidden p-6 flex items-center gap-4 cursor-pointer"
-          >
-            <div>
-              <span className="text-[#c8102e] text-xs font-bold uppercase tracking-widest">MOST POPULAR</span>
-              <h3 className="text-white text-2xl font-black uppercase leading-tight mt-1">
-                SPECIAL<br />DELICIOUS
-              </h3>
-              <button className="mt-3 bg-white text-gray-900 text-xs font-bold px-4 py-2 rounded-full uppercase tracking-wide hover:bg-[#c8102e] hover:text-white transition-colors">
-                ORDER NOW
-              </button>
-            </div>
-            <div className="ml-auto text-6xl">🍕</div>
-            <div className="absolute top-4 right-16 w-16 h-16 rounded-full bg-[#d4a017] flex items-center justify-center">
-              <span className="text-white text-xs font-black text-center leading-tight">FREE<br />DRINKS</span>
-            </div>
-          </motion.div>
-
-          {/* Fastest Delivery */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.7 }}
-            whileHover={{ scale: 1.02 }}
-            className="relative bg-gray-900 rounded-2xl overflow-hidden p-6 flex items-center gap-4 cursor-pointer"
-          >
-            <div>
-              <span className="text-[#c8102e] text-xs font-bold uppercase tracking-widest">ORDER $50</span>
-              <h3 className="text-white text-2xl font-black uppercase leading-tight mt-1">
-                FASTEST<br />DELIVERY
-              </h3>
-              <button className="mt-3 bg-white text-gray-900 text-xs font-bold px-4 py-2 rounded-full uppercase tracking-wide hover:bg-[#c8102e] hover:text-white transition-colors">
-                ORDER NOW
-              </button>
-            </div>
-            <div className="ml-auto text-6xl">🛵</div>
-          </motion.div>
+        {/* Offer banners */}
+        <div className="grid md:grid-cols-2 gap-4 mt-16">
+          {[
+            { label: 'MOST POPULAR', title: 'SPECIAL DELICIOUS', badge: 'FREE DRINKS', emoji: '🍕', color: '#1a1a1a' },
+            { label: 'ORDER $50', title: 'FASTEST DELIVERY', badge: null, emoji: '🛵', color: '#c8102e' },
+          ].map((banner, i) => (
+            <motion.div key={banner.title}
+              className="relative overflow-hidden rounded-sm p-8 flex items-center gap-6 cursor-pointer group"
+              style={{ background: banner.color }}
+              initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.5 + i * 0.15 }}
+              whileHover={{ scale: 1.02 }}>
+              <div className="text-white flex-1">
+                <p className="text-[#d4a017] text-xs font-bold uppercase tracking-widest mb-1">{banner.label}</p>
+                <h3 className="text-2xl font-black leading-tight">{banner.title}</h3>
+                <button className="mt-4 bg-white text-[#1a1a1a] text-xs font-bold uppercase px-4 py-2 hover:bg-gray-100 transition-colors">
+                  ORDER NOW
+                </button>
+              </div>
+              <div className="relative">
+                <span className="text-6xl group-hover:scale-110 transition-transform block">{banner.emoji}</span>
+                {banner.badge && (
+                  <span className="absolute -top-3 -right-3 bg-[#d4a017] text-white text-xs font-black w-14 h-14 rounded-full flex items-center justify-center text-center leading-tight">
+                    {banner.badge}
+                  </span>
+                )}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

@@ -1,136 +1,92 @@
 'use client';
-
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
+import { useState, useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 
 const categories = [
-  { id: 'starters', label: 'Starters', icon: '🍜' },
-  { id: 'pizza', label: 'Pizza', icon: '🍕' },
-  { id: 'burgers', label: 'Burgers', icon: '🍔' },
-  { id: 'chicken', label: 'Chicken', icon: '🍗' },
-  { id: 'drinks', label: 'Drinks', icon: '🍺' },
+  { id: 'starters', label: 'STARTERS', icon: '🥣' },
+  { id: 'pizza', label: 'PIZZA', icon: '🍕' },
+  { id: 'burgers', label: 'BURGERS', icon: '🍔' },
+  { id: 'chicken', label: 'CHICKEN', icon: '🍗' },
+  { id: 'drinks', label: 'DRINKS', icon: '🍺' },
 ];
 
-const menuItems = {
-  starters: [
-    { name: 'Spring Fling Pizza', desc: 'Lorem ipsum has been the industry.', price: '$10.00', badge: 'NEW', emoji: '🥗' },
-    { name: 'Korma Special Pizza', desc: 'Lorem ipsum has been the industry.', price: '$12.00', emoji: '🍱' },
-    { name: 'Farm Villa Pizza', desc: 'Lorem ipsum has been the industry.', price: '$18.00', emoji: '🌾' },
-    { name: 'Hot Passion Pizza', desc: 'Lorem ipsum has been the industry.', price: '$16.00', badge: 'HOT', badgeColor: 'red', emoji: '🌶️' },
-    { name: 'Vegetarian Superme Pizza', desc: 'Lorem ipsum has been the industry.', price: '$18.00', emoji: '🥦' },
-    { name: 'Special Florentine Pizza', desc: 'Lorem ipsum has been the industry.', price: '$20.00', emoji: '🍃' },
-    { name: 'Paneer Tikka Pizza', desc: 'Lorem ipsum has been the industry.', price: '$22.00', badge: 'HOT', badgeColor: 'red', emoji: '🧀' },
-    { name: 'Mexican Combo Pizza', desc: 'Lorem ipsum has been the industry.', price: '$22.00', emoji: '🫔' },
-  ],
-  pizza: [
-    { name: 'Margherita Classic', desc: 'Fresh tomato, mozzarella, basil.', price: '$14.00', emoji: '🍕' },
-    { name: 'BBQ Chicken', desc: 'Smoky BBQ sauce, grilled chicken.', price: '$16.00', emoji: '🍕' },
-    { name: 'Pepperoni Feast', desc: 'Double pepperoni, cheese blend.', price: '$15.00', badge: 'HOT', badgeColor: 'red', emoji: '🍕' },
-    { name: 'Veggie Supreme', desc: 'Fresh garden vegetables.', price: '$13.00', emoji: '🍕' },
-  ],
-  burgers: [
-    { name: 'Classic Beef Burger', desc: 'Juicy beef patty with fresh veggies.', price: '$12.00', emoji: '🍔' },
-    { name: 'Crispy Chicken', desc: 'Crispy fried chicken fillet.', price: '$11.00', emoji: '🍔' },
-  ],
-  chicken: [
-    { name: 'Grilled Chicken', desc: 'Herb-marinated grilled chicken.', price: '$14.00', emoji: '🍗' },
-    { name: 'Chicken Wings', desc: 'Spicy buffalo wings.', price: '$10.00', badge: 'HOT', badgeColor: 'red', emoji: '🍗' },
-  ],
-  drinks: [
-    { name: 'Fresh Lemonade', desc: 'Freshly squeezed lemons.', price: '$4.00', emoji: '🍋' },
-    { name: 'Iced Coffee', desc: 'Cold brew with cream.', price: '$5.00', emoji: '☕' },
-  ],
-};
+const menuItems = [
+  { name: 'Spring Fling Pizza', desc: 'Lorem ipsum has been the industry.', price: 10, badge: 'NEW', badgeColor: '#16a34a', cat: 'pizza', emoji: '🍕' },
+  { name: 'Korma Special Pizza', desc: 'Lorem ipsum has been the industry.', price: 12, cat: 'pizza', emoji: '🍕' },
+  { name: 'Farm Villa Pizza', desc: 'Lorem ipsum has been the industry.', price: 18, cat: 'pizza', emoji: '🍕' },
+  { name: 'Hot Passion Pizza', desc: 'Lorem ipsum has been the industry.', price: 16, badge: 'HOT', badgeColor: '#c8102e', cat: 'pizza', emoji: '🍕', note: '♡ CHEF LOVE' },
+  { name: 'Vegetarian Superme Pizza', desc: 'Lorem ipsum has been the industry.', price: 18, badge: 'HOT', badgeColor: '#c8102e', cat: 'pizza', emoji: '🍕' },
+  { name: 'Special Florentine Pizza', desc: 'Lorem ipsum has been the industry.', price: 20, cat: 'pizza', emoji: '🍕', note: '♡ CHEF LOVE' },
+  { name: 'Paneer Tikka Pizza', desc: 'Lorem ipsum has been the industry.', price: 22, badge: 'HOT', badgeColor: '#c8102e', cat: 'pizza', emoji: '🍕' },
+  { name: 'Mexican Combo Pizza', desc: 'Lorem ipsum has been the industry.', price: 22, cat: 'pizza', emoji: '🍕' },
+  { name: 'Classic Beef Burger', desc: 'Juicy beef patty with fresh veggies.', price: 14, cat: 'burgers', emoji: '🍔' },
+  { name: 'Chicken Deluxe Burger', desc: 'Crispy fried chicken with special sauce.', price: 12, cat: 'burgers', emoji: '🍔' },
+  { name: 'BBQ Chicken Wings', desc: 'Slow-cooked smoky BBQ wings.', price: 16, cat: 'chicken', emoji: '🍗' },
+  { name: 'Fresh Lemonade', desc: 'Freshly squeezed lemon juice.', price: 5, cat: 'drinks', emoji: '🍋' },
+];
 
 export default function ExclusiveMenuSection() {
-  const [activeCategory, setActiveCategory] = useState('starters');
-  const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: true });
-  const items = menuItems[activeCategory as keyof typeof menuItems] || [];
+  const [activeTab, setActiveTab] = useState('pizza');
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+  const filtered = menuItems.filter(i => i.cat === activeTab);
 
   return (
-    <section ref={ref} className="py-20 bg-white">
+    <section ref={ref} className="py-20 bg-[#f5f5f5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-10">
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            className="text-[#c8102e] text-sm font-semibold uppercase tracking-widest"
-          >
-            DELICIOUS MEALS
-          </motion.p>
-          <span className="w-px h-8 bg-gray-200" />
-          <motion.h2
-            initial={{ opacity: 0, x: -20 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            className="text-4xl md:text-5xl font-black text-gray-900 uppercase"
-          >
-            EXCLUSIVE MENU
-          </motion.h2>
-        </div>
+        <motion.div className="flex items-center gap-4 mb-10"
+          initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }}>
+          <span className="text-[#c8102e] font-bold text-sm uppercase tracking-widest">DELICIOUS MEALS</span>
+          <div className="w-px h-8 bg-gray-300" />
+          <h2 className="text-4xl md:text-5xl font-black">EXCLUSIVE MENU</h2>
+        </motion.div>
 
-        {/* Category Tabs */}
-        <div className="flex gap-8 mb-10 border-b border-gray-100 overflow-x-auto pb-2">
+        {/* Category tabs */}
+        <div className="flex gap-8 mb-10 overflow-x-auto pb-2">
           {categories.map((cat) => (
-            <motion.button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              whileHover={{ scale: 1.05 }}
-              className={`flex flex-col items-center gap-2 pb-3 text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all border-b-2 ${
-                activeCategory === cat.id
-                  ? 'border-[#c8102e] text-[#c8102e]'
-                  : 'border-transparent text-gray-400 hover:text-gray-600'
-              }`}
-            >
+            <button key={cat.id} onClick={() => setActiveTab(cat.id)}
+              className={`flex flex-col items-center gap-2 flex-shrink-0 pb-3 border-b-2 transition-all ${activeTab === cat.id ? 'border-[#c8102e] text-[#1a1a1a]' : 'border-transparent text-gray-400 hover:text-gray-600'}`}>
               <span className="text-2xl">{cat.icon}</span>
-              {cat.label}
-            </motion.button>
+              <span className="text-xs font-bold tracking-widest">{cat.label}</span>
+            </button>
           ))}
         </div>
 
-        {/* Menu Items */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeCategory}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-0"
-          >
-            {items.map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-                whileHover={{ backgroundColor: '#fafafa' }}
-                className="flex items-center gap-4 py-4 px-2 border-b border-gray-100 cursor-pointer transition-colors"
-              >
-                <div className="relative flex-shrink-0">
-                  {item.badge && (
-                    <span className={`absolute -top-1 -left-1 text-xs font-bold text-white px-1.5 py-0.5 rounded z-10 ${
-                      item.badgeColor === 'red' ? 'bg-[#c8102e]' : 'bg-green-500'
-                    }`}>
-                      {item.badge}
-                    </span>
-                  )}
-                  <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
-                    {item.emoji}
-                  </div>
+        {/* Menu items */}
+        <motion.div className="grid md:grid-cols-2 gap-0" layout>
+          {filtered.map((item, i) => (
+            <motion.div key={item.name}
+              className="flex items-center gap-4 py-4 border-b border-gray-200 hover:bg-white transition-colors px-3 group"
+              initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.07, duration: 0.4 }}
+              layout>
+              {/* Food image */}
+              <div className="relative flex-shrink-0">
+                <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+                  <span className="text-3xl group-hover:scale-110 transition-transform">{item.emoji}</span>
                 </div>
-                <div className="flex-1">
-                  <h4 className="font-bold text-gray-900 text-sm uppercase tracking-wide">{item.name}</h4>
-                  <p className="text-gray-400 text-xs mt-0.5">{item.desc}</p>
+                {item.badge && (
+                  <span className="absolute -top-1 -left-1 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full" style={{ background: item.badgeColor }}>
+                    {item.badge}
+                  </span>
+                )}
+              </div>
+              {/* Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="font-bold text-sm uppercase tracking-wide">{item.name}</h3>
+                  {item.note && <span className="text-[10px] text-gray-500 border border-gray-300 px-1.5 py-0.5 rounded-full">{item.note}</span>}
                 </div>
-                <span className="font-bold text-gray-800 text-sm flex-shrink-0">
-                  <sup className="text-xs">$</sup>{item.price.replace('$', '')}
-                </span>
-              </motion.div>
-            ))}
-          </motion.div>
-        </AnimatePresence>
+                <p className="text-gray-500 text-xs mt-0.5 truncate">{item.desc}</p>
+              </div>
+              {/* Price */}
+              <div className="flex-shrink-0">
+                <span className="font-black text-sm"><sup className="text-xs">$</sup>{item.price}<sup>.00</sup></span>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );

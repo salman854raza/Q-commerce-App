@@ -1,124 +1,97 @@
 'use client';
-
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
 const specialities = [
-  { title: 'Free Cold Drinks', desc: 'Lorem ipsum simply dolor eiusmod tempor.', icon: '🍹', image: '👩‍🍷' },
-  { title: 'Quality Foods', desc: 'Lorem ipsum simply dolor eiusmod tempor.', icon: '🌿', image: '🍅' },
-  { title: 'Popular Masterchef', desc: 'Lorem ipsum simply dolor eiusmod tempor.', icon: '👨‍🍳', image: '👨‍🍳' },
-  { title: 'Delicious Recipes', desc: 'Lorem ipsum simply dolor eiusmod tempor.', icon: '🍕', image: '🍢' },
+  { title: 'FREE COLD DRINKS', icon: '🍷', desc: 'Lorem ipsum simply dolor eiusmod tempor.', img: '👩' },
+  { title: 'QUALITY FOODS', icon: '🌿', desc: 'Lorem ipsum simply dolor eiusmod tempor.', img: '🍕' },
+  { title: 'POPULAR MASTERCHEF', icon: '👨‍🍳', desc: 'Lorem ipsum simply dolor eiusmod tempor.', img: '👨‍🍳' },
+  { title: 'DELICIOUS RECIPES', icon: '🍽️', desc: 'Lorem ipsum simply dolor eiusmod tempor.', img: '🥘' },
 ];
 
 function FlipCard({ item, index }: { item: typeof specialities[0]; index: number }) {
-  const [ref, inView] = useInView({ threshold: 0.3, triggerOnce: true });
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, rotateY: 90 }}
-      animate={inView ? { opacity: 1, rotateY: 0 } : {}}
-      transition={{ duration: 0.7, delay: index * 0.15, ease: 'easeOut' }}
-      className="grid grid-cols-2 gap-0 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow"
-      style={{ perspective: 1000 }}
-    >
-      {/* Image half */}
-      <div className="bg-gray-100 flex items-center justify-center h-40 text-[80px]">
-        {item.image}
-      </div>
-      {/* Text half */}
-      <div className="bg-white flex flex-col justify-center p-4">
-        <span className="text-2xl mb-2">{item.icon}</span>
-        <h4 className="font-bold text-gray-900 text-sm uppercase tracking-wide">{item.title}</h4>
-        <p className="text-gray-400 text-xs mt-1">{item.desc}</p>
+    <motion.div ref={ref} className="perspective h-56"
+      initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ delay: index * 0.15, duration: 0.6 }}>
+      <div className="card-flip w-full h-full">
+        <div className="card-inner">
+          {/* Front - image */}
+          <div className="card-front">
+            <div className="w-full h-full bg-gray-100 flex items-center justify-center rounded-sm overflow-hidden">
+              <span className="text-8xl">{item.img}</span>
+            </div>
+          </div>
+          {/* Back - info */}
+          <div className="card-back bg-white border border-gray-100 shadow-lg p-6 flex flex-col justify-center rounded-sm">
+            <span className="text-3xl mb-3">{item.icon}</span>
+            <h3 className="font-bold text-sm tracking-wider mb-2">{item.title}</h3>
+            <p className="text-gray-500 text-xs leading-relaxed">{item.desc}</p>
+          </div>
+        </div>
       </div>
     </motion.div>
   );
 }
 
 export default function SpecialitiesSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
-
-  // Tomato image: spins continuously AND moves down on scroll
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+  const tomatoY = useTransform(scrollYProgress, [0, 1], [-40, 80]);
   const tomatoRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
-  const tomatoY = useTransform(scrollYProgress, [0, 1], ['-20px', '60px']);
-
-  const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: true });
+  const inView = useInView(ref, { once: true });
 
   return (
-    <section ref={sectionRef} className="py-20 bg-[#f9f9f9] relative overflow-hidden">
-      {/* Spinning tomato - moves down on scroll */}
-      <motion.div
-        style={{ rotate: tomatoRotate, y: tomatoY }}
-        className="absolute left-0 top-0 text-6xl z-10 hidden lg:block"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-      >
-        🍅
-      </motion.div>
-
-      {/* Small decorative dots */}
-      <div className="absolute right-8 top-16 flex gap-2">
-        <div className="w-2 h-2 rounded-full bg-gray-300" />
-        <div className="w-2 h-2 rounded-full bg-[#c8102e]" />
+    <section ref={ref} className="py-20 bg-gray-50 relative overflow-hidden">
+      {/* Delivery banner */}
+      <div className="bg-white border-b border-gray-100 py-4 mb-16">
+        <motion.div className="max-w-4xl mx-auto flex items-center justify-center gap-3 px-4"
+          initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ duration: 0.6 }}>
+          <span className="text-2xl">🛵</span>
+          <p className="text-sm font-semibold text-gray-700">
+            GET FREE DELIVERY YOUR FOOD OF HAPPINESS IN{' '}
+            <span className="text-[#c8102e] font-black uppercase">WITHIN 30 MINUTES.</span>
+          </p>
+        </motion.div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={ref}>
-        {/* Section Header */}
-        <div className="flex items-center gap-4 mb-12">
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            className="text-[#c8102e] text-sm font-semibold uppercase tracking-widest"
-          >
-            HEART OF KITCHEN
-          </motion.p>
-          <span className="w-px h-8 bg-gray-300" />
-          <motion.h2
-            initial={{ opacity: 0, x: -20 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            className="text-4xl md:text-5xl font-black text-gray-900 uppercase"
-          >
-            OUR SPECIALITIES
-          </motion.h2>
-        </div>
+      {/* Spinning tomato - moves down on scroll */}
+      <motion.div className="absolute left-4 top-32 w-20 h-20 pointer-events-none z-10" style={{ y: tomatoY, rotate: tomatoRotate }}>
+        <span className="text-6xl img-3d block">🍅</span>
+      </motion.div>
 
-        {/* Flip Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <motion.div className="flex items-center gap-4 mb-12"
+          initial={{ opacity: 0, x: -30 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.6 }}>
+          <span className="text-[#c8102e] font-bold text-sm uppercase tracking-widest">HEART OF KITCHEN</span>
+          <div className="w-px h-8 bg-gray-300" />
+          <h2 className="text-3xl md:text-4xl font-black">OUR SPECIALITIES</h2>
+        </motion.div>
+
+        {/* Grid - image + text alternating (flip on scroll) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {specialities.map((item, i) => (
-            <FlipCard key={i} item={item} index={i} />
+            <FlipCard key={item.title} item={item} index={i} />
           ))}
         </div>
 
-        {/* Stats Counter */}
-        <div className="grid grid-cols-4 gap-8 mt-16">
+        {/* Stats */}
+        <div className="grid grid-cols-4 gap-8 mt-16 py-12 border-t border-gray-200">
           {[
-            { num: 45, label: 'WORKERS' },
-            { num: 58, label: 'MENU' },
-            { num: 12, label: 'EXPERIENCE' },
-            { num: 95, label: 'CHEFS' },
+            { num: '45', label: 'WORKERS' },
+            { num: '58', label: 'MENU' },
+            { num: '12', label: 'EXPERIENCE' },
+            { num: '95', label: 'CHEFS' },
           ].map((stat, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.5 + i * 0.1 }}
-              className="text-center"
-            >
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={inView ? { opacity: 1 } : {}}
-                transition={{ delay: 0.7 + i * 0.1, duration: 1 }}
-                className="text-5xl md:text-6xl font-black text-[#d4a017] block"
-              >
-                {stat.num}
-              </motion.span>
-              <span className="text-xs font-bold uppercase tracking-widest text-gray-500 mt-1 block">
-                {stat.label}
-              </span>
+            <motion.div key={stat.label} className="text-center"
+              initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}>
+              <div className="stat-number">{stat.num}</div>
+              <p className="text-xs text-gray-500 font-semibold tracking-widest mt-1">{stat.label}</p>
             </motion.div>
           ))}
         </div>
