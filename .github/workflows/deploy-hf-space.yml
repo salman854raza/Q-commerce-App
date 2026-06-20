@@ -1,0 +1,49 @@
+name: 🚀 Deploy Backend to Hugging Face Space
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  deploy-to-hf-space:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ✅ Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: 🤗 Push Backend to Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          # Install huggingface_hub
+          pip install huggingface_hub -q
+
+          # Push backend folder to HF Space
+          python3 << 'PYEOF'
+          import os
+          from huggingface_hub import HfApi
+
+          TOKEN = os.environ["HF_TOKEN"]
+          REPO_ID = "salman854raza/pizza-chat-bot"
+          BACKEND_DIR = "backend"
+
+          api = HfApi(token=TOKEN)
+          print(f"✅ Uploading to: {REPO_ID}")
+
+          # Upload entire backend folder
+          api.upload_folder(
+              folder_path=BACKEND_DIR,
+              repo_id=REPO_ID,
+              repo_type="space",
+              commit_message="🍕 Deploy Pizzao Backend - Multi-Agent FastAPI",
+              ignore_patterns=["__pycache__", "*.pyc", ".env", "*.egg-info"],
+          )
+          print("🎉 Successfully deployed to Hugging Face Space!")
+          print(f"🔗 URL: https://salman854raza-pizza-chat-bot.hf.space")
+          PYEOF
