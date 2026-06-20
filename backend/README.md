@@ -44,7 +44,7 @@ Set these in Space Settings → Secrets:
 ## 📡 Usage
 
 ```bash
-curl -X POST https://salman854raza-pizzao-backend.hf.space/chat \
+curl -X POST https://salman854raza-pizza-chat-bot.hf.space/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "Show me your menu", "session_id": "user123"}'
 ```

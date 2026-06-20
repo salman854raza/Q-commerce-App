@@ -52,7 +52,7 @@ const agentLabels: Record<string, string> = {
   coordinator: '🤖 AI Coordinator',
 };
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://salman854raza-pizzao-backend.hf.space';
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://salman854raza-pizza-chat-bot.hf.space';
 
 export default function ChatbotWidget() {
   const [open, setOpen] = useState(false);
