@@ -1,100 +1,124 @@
 'use client';
-import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowRight, Clock, Star, Truck } from 'lucide-react';
 
 export default function HeroSection() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -80]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 1.08]);
+  const pizzaY   = useTransform(scrollYProgress, [0,1], [0, -80]);
+  const pepperY  = useTransform(scrollYProgress, [0,1], [0,  120]);
+  const tomatoY  = useTransform(scrollYProgress, [0,1], [0,  90]);
+  const textY    = useTransform(scrollYProgress, [0,1], [0, -40]);
 
   return (
-    <section ref={ref} className="relative min-h-screen bg-[#c8102e] overflow-hidden flex flex-col">
-      {/* Decorative vegetables */}
-      <motion.div className="absolute top-16 right-8 w-20 h-20 z-20 pointer-events-none" style={{ y: y2 }}>
-        <div className="w-full h-full animate-spin-slow opacity-90">
-          <svg viewBox="0 0 80 80" className="w-full h-full"><circle cx="40" cy="40" r="35" fill="#c8102e" stroke="#a00d24" strokeWidth="2"/><text x="40" y="48" textAnchor="middle" fontSize="28">🫑</text></svg>
-        </div>
+    <section ref={ref} className="relative min-h-screen bg-[#c8102e] overflow-hidden flex items-center">
+
+      {/* Background texture */}
+      <div className="absolute inset-0 opacity-[0.04]"
+        style={{ backgroundImage:'radial-gradient(circle,#fff 1px,transparent 1px)', backgroundSize:'32px 32px' }} />
+
+      {/* Floating decoratives */}
+      <motion.div className="absolute top-28 right-12 z-20 pointer-events-none" style={{ y: pepperY }}>
+        <motion.span className="text-6xl food-3d block anim-spin" style={{ fontSize:72 }}>🫑</motion.span>
       </motion.div>
-      <motion.div className="absolute top-24 left-6 w-16 h-16 z-20 pointer-events-none" style={{ y: y1 }}>
-        <div className="animate-float"><span className="text-5xl">🍅</span></div>
+      <motion.div className="absolute top-48 left-8 z-20 pointer-events-none" style={{ y: tomatoY }}>
+        <span className="text-5xl food-3d block anim-float">🍅</span>
+      </motion.div>
+      <motion.div className="absolute bottom-32 left-16 pointer-events-none z-20">
+        <span className="text-4xl food-3d block anim-float2">🌿</span>
+      </motion.div>
+      <motion.div className="absolute bottom-24 right-20 pointer-events-none z-20">
+        <span className="text-5xl food-3d block anim-float">🌶️</span>
       </motion.div>
 
-      {/* Main content */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center pt-16 px-4">
-        <motion.div className="text-center mb-6"
-          initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-          <p className="text-[#d4a017] font-bold italic text-2xl md:text-3xl" style={{ fontFamily: 'Georgia, serif' }}>
-            Original
-          </p>
-        </motion.div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 w-full">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
 
-        <motion.h1 className="text-white font-black text-center leading-none mb-8"
-          style={{ fontSize: 'clamp(4rem, 15vw, 10rem)', letterSpacing: '-0.02em', textShadow: '4px 4px 0px rgba(0,0,0,0.2)' }}
-          initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.2 }}>
-          ITALIAN
-        </motion.h1>
+          {/* LEFT — text */}
+          <motion.div style={{ y: textY }}>
+            <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:.6 }}>
+              <p className="text-[#d4a017] font-black italic text-2xl mb-2" style={{ fontFamily:'Georgia,serif' }}>Original</p>
+              <h1 className="text-white font-black leading-none mb-4"
+                style={{ fontSize:'clamp(3.5rem,11vw,7.5rem)', letterSpacing:'-.02em', textShadow:'0 4px 32px rgba(0,0,0,.25)' }}>
+                ITALIAN<br/>PIZZA
+              </h1>
+              <p className="text-white/75 text-lg leading-relaxed mb-8 max-w-md">
+                Handcrafted with love, baked to perfection. The 3rd largest pizza chain with one mission — making the freshest, tastiest pizza you've ever had.
+              </p>
 
-        {/* Pizza image */}
-        <motion.div className="relative w-full max-w-2xl mx-auto" style={{ scale }}>
-          <motion.div className="relative" initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1, delay: 0.4, ease: 'easeOut' }}>
-            <div className="w-full aspect-square max-w-lg mx-auto relative">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-[200px] md:text-[280px] filter drop-shadow-2xl animate-float" style={{ lineHeight: 1 }}>🍕</span>
+              {/* Badges */}
+              <div className="flex flex-wrap gap-3 mb-10">
+                {[
+                  { icon:<Clock size={13}/>,  text:'30 Min Delivery' },
+                  { icon:<Star size={13}/>,   text:'5-Star Reviews'  },
+                  { icon:<Truck size={13}/>,  text:'Free Delivery'   },
+                ].map(b => (
+                  <div key={b.text} className="flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white text-xs font-bold px-3 py-2 rounded-full">
+                    {b.icon}{b.text}
+                  </div>
+                ))}
               </div>
-              {/* Today offer badge */}
-              <motion.div className="absolute top-8 right-4 md:right-8 bg-[#d4a017] text-white rounded-full w-20 h-20 flex flex-col items-center justify-center text-center font-black uppercase text-xs leading-tight shadow-xl"
-                animate={{ rotate: [0, 5, -5, 0] }} transition={{ duration: 4, repeat: Infinity }}>
+
+              <div className="flex flex-wrap gap-4">
+                <Link href="/menu">
+                  <motion.button className="btn btn-dark rounded-sm flex items-center gap-2"
+                    whileHover={{ scale:1.03 }} whileTap={{ scale:.97 }}>
+                    Order Now <ArrowRight size={15}/>
+                  </motion.button>
+                </Link>
+                <Link href="/menu">
+                  <motion.button className="btn btn-outline rounded-sm border-white text-white hover:bg-white hover:text-[#c8102e]"
+                    whileHover={{ scale:1.03 }} whileTap={{ scale:.97 }}>
+                    View Menu
+                  </motion.button>
+                </Link>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* RIGHT — pizza */}
+          <div className="relative flex items-center justify-center">
+            <motion.div style={{ y: pizzaY }}
+              initial={{ scale:.7, opacity:0, rotate:-15 }}
+              animate={{ scale:1, opacity:1, rotate:0 }}
+              transition={{ duration:1, ease:[.175,.885,.32,1.275] }}>
+
+              {/* Glow circle */}
+              <div className="absolute inset-0 rounded-full bg-[#a00d24] blur-3xl opacity-60 scale-75" />
+
+              {/* Pizza emoji */}
+              <motion.span
+                className="text-[200px] md:text-[260px] block leading-none food-3d relative z-10 anim-float"
+                style={{ lineHeight:1 }}>
+                🍕
+              </motion.span>
+
+              {/* TODAY OFFER badge */}
+              <motion.div
+                className="absolute top-6 right-4 bg-[#d4a017] text-white rounded-full w-20 h-20 flex flex-col items-center justify-center font-black text-xs uppercase shadow-2xl text-center leading-tight"
+                animate={{ rotate:[0,6,-6,0] }} transition={{ duration:4, repeat:Infinity }}>
                 TODAY<br/>OFFER
               </motion.div>
-            </div>
-          </motion.div>
 
-          {/* Order button */}
-          <motion.div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-20"
-            initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.9, type: 'spring', stiffness: 200 }}>
-            <Link href="/menu">
-              <motion.div className="w-28 h-28 bg-[#d4a017] rounded-full flex flex-col items-center justify-center text-white font-black text-sm uppercase shadow-2xl cursor-pointer border-4 border-white"
-                whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} animate={{ boxShadow: ['0 0 0 0 rgba(212,160,23,0.4)', '0 0 0 20px rgba(212,160,23,0)', '0 0 0 0 rgba(212,160,23,0.4)'] }} transition={{ duration: 2, repeat: Infinity }}>
-                <ArrowRight size={18} className="mb-1" />
-                ORDER<br/>PIZZA
-              </motion.div>
-            </Link>
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Bottom white section */}
-      <div className="relative bg-white mt-16 pt-20 pb-8">
-        <div className="hero-brush absolute -top-1 left-0 right-0" style={{ background: 'white' }} />
-        
-        <motion.p className="text-center text-gray-300 font-black text-3xl md:text-4xl tracking-widest uppercase mb-12"
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
-          THE TRUE TASTE OF ITALY
-        </motion.p>
-
-        {/* Category tabs */}
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="grid grid-cols-4 gap-4">
-            {[
-              { label: 'PIZZA', icon: '🍕' },
-              { label: 'BURGERS', icon: '🍔' },
-              { label: 'SALAD', icon: '🥗' },
-              { label: 'FRIES', icon: '🍟' },
-            ].map((cat, i) => (
-              <motion.div key={cat.label} className="flex flex-col items-center gap-2 p-4 cursor-pointer hover:text-[#c8102e] transition-colors border-b-2 border-transparent hover:border-[#c8102e]"
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 + i * 0.1 }}
-                whileHover={{ y: -3 }}>
-                <span className="text-3xl">{cat.icon}</span>
-                <span className="text-xs font-bold text-gray-500 tracking-widest">{cat.label}</span>
-              </motion.div>
-            ))}
+              {/* Order button */}
+              <Link href="/menu" className="absolute -bottom-4 left-1/2 -translate-x-1/2">
+                <motion.div
+                  className="w-24 h-24 bg-[#d4a017] rounded-full flex flex-col items-center justify-center text-white font-black text-xs uppercase shadow-2xl text-center border-4 border-white anim-pulse cursor-pointer"
+                  whileHover={{ scale:1.12 }} whileTap={{ scale:.95 }}>
+                  <ArrowRight size={16} className="mb-1"/>
+                  ORDER<br/>PIZZA
+                </motion.div>
+              </Link>
+            </motion.div>
           </div>
         </div>
       </div>
+
+      {/* Bottom white curve */}
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-white"
+        style={{ clipPath:'polygon(0 100%,5% 30%,15% 85%,25% 15%,35% 75%,45% 10%,55% 70%,65% 20%,75% 80%,85% 25%,95% 65%,100% 5%,100% 100%)' }} />
     </section>
   );
 }

@@ -1,33 +1,22 @@
 'use client';
 import { motion } from 'framer-motion';
 
-interface PageHeroProps {
-  title: string;
-  subtitle: string;
-}
-
-export default function PageHero({ title, subtitle }: PageHeroProps) {
+export default function PageHero({ title, subtitle }: { title:string; subtitle:string }) {
   return (
-    <section className="relative bg-[#c8102e] pt-32 pb-16 overflow-hidden">
-      {/* Decorative elements */}
-      <motion.div className="absolute top-8 left-6 pointer-events-none" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
-        <span className="text-4xl animate-float block">🌿</span>
-      </motion.div>
-      <motion.div className="absolute top-6 right-8 pointer-events-none" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
-        <span className="text-3xl animate-spin-slow block">🌿</span>
-      </motion.div>
+    <div className="page-hero">
+      {/* Floating food decor */}
+      <motion.span className="absolute top-8 left-8 text-4xl pointer-events-none anim-float opacity-40">🌿</motion.span>
+      <motion.span className="absolute top-6 right-12 text-3xl pointer-events-none anim-spin opacity-30">🌿</motion.span>
 
-      <div className="relative z-10 text-center">
-        <motion.div className="flex items-center justify-center gap-4"
-          initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-          <h1 className="text-white font-black text-5xl md:text-6xl uppercase tracking-tight">{title}</h1>
-          <div className="h-10 w-px bg-white/40" />
-          <span className="text-[#d4a017] font-bold text-sm uppercase tracking-widest">{subtitle}</span>
+      <div className="relative z-10 text-center px-4">
+        <motion.div initial={{opacity:0,y:30}} animate={{opacity:1,y:0}} transition={{duration:.7}}>
+          <div className="flex items-center justify-center gap-4 flex-wrap">
+            <h1 className="text-white font-black text-5xl md:text-6xl uppercase tracking-tight">{title}</h1>
+            <div className="w-px h-10 bg-white/30 hidden sm:block"/>
+            <span className="text-[#d4a017] font-bold text-sm uppercase tracking-widest">{subtitle}</span>
+          </div>
         </motion.div>
       </div>
-
-      {/* Brush stroke bottom */}
-      <div className="hero-brush" />
-    </section>
+    </div>
   );
 }
